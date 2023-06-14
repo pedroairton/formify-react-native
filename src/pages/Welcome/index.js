@@ -1,15 +1,46 @@
 import { View, Text, StyleSheet,Image,TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 import * as Animatable from 'react-native-animatable'
 
 import { useNavigation } from '@react-navigation/native'
 
 export default function Welcome() {
+
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => {
+    return state;
+  });
+
+  console.log(data, loading);
+
+  const fetchData = () => {
+    fetch('http://192.168.0.193:3000/')
+      .then((res) => res.json())
+      .then((results) => {
+        // setData(results)
+        // setLoading(false)
+        dispatch({ type: 'ADD_DATA', payload: results });
+        dispatch({ type: 'SET_LOADING', payload: false });
+        console.log('entrou!')
+      })
+      .catch((err) => {
+        Alert.alert('someting went wrong');
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [data]);
+
+
+
+
   const navigation = useNavigation()
   return (
     <View style={styles.container}>
-      <Text>Tela Bem vindo</Text>
 
 <View style={styles.containerLogo}>
   <Animatable.Image
@@ -18,6 +49,9 @@ export default function Welcome() {
   style={{width: '35%', height: '35%' }}
   resizeMode='contain'
   />
+  <Animatable.View animation="flipInX">
+      <Text style={styles.textLogo}>FORMIFY</Text>
+    </Animatable.View>
 </View>
 
     <Animatable.View delay={700} animation="fadeInUp" style={styles.containerForm}>
@@ -27,8 +61,12 @@ export default function Welcome() {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignIn')}>
         <Text style={styles.buttonText}>Acessar</Text>
       </TouchableOpacity>
+      <View>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Results')}>
+        <Text style={styles.buttonText}>Acessar resultados</Text>
+      </TouchableOpacity>
+      </View>
     </Animatable.View>
-
     </View>
   )
 }
@@ -41,7 +79,7 @@ const styles = StyleSheet.create({
   containerLogo:{
     flex:2,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   containerForm:{
     flex:1,
@@ -62,10 +100,21 @@ const styles = StyleSheet.create({
 
   },
   text:{
-    color: '#a1a1a1'
+    alignSelf: 'center',
+    color: '#a1a1a1',
+    marginBottom: 80, //REMOVER DEPOIS -----------------------------------------------------------------------------------------------------
+  },
+  textLogo:{
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    borderBottomWidth: 1,
+    borderBottomColor: 'white'
+  
   },
   button:{
-    position: 'absolute',
+    // position: 'absolute',
     backgroundColor: '#2F3C7E',
     borderRadius: 8,
     paddingVertical: 8,

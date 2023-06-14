@@ -52,6 +52,26 @@ export default function Form() {
   const handleSliderChange10 = (newValue) => {
     setValue10(newValue);
   };
+
+  const [valorCmt, setValorCmt] = useState('');
+
+  const handleSubmit = () => {
+    console.log('Valor do TextInput:', valorCmt);
+  };
+  const handleChangeTexto = (texto) => {
+    setValorInput(texto);
+  };
+
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpand = () => {
+      setExpanded(!expanded);
+  }
+  const [expanded2, setExpanded2] = useState(false);
+
+  const toggleExpand2 = () => {
+      setExpanded2(!expanded2);
+  }
   return (
     <View style={styles.container}>
         <ScrollView>
@@ -59,16 +79,25 @@ export default function Form() {
       <Text style={styles.titlePage}>FORMULÁRIO</Text>
     </Animatable.View>
         <Animatable.View animation="fadeInUp" delay={200} style={styles.containerForm}>
-              <View style={styles.containerProf}>
-                  <Image
-                      source={require('../../assets/iconProf.jpg')}
-                      style={{ width: '30%', height: '30%' }}
-                      resizeMode='contain' />
-                  
-                  <View>
-                      <Text style={styles.title}>PROFESSOR 1</Text>
-                  </View>
-              </View>
+
+
+        <TouchableOpacity style={styles.expand} onPress={toggleExpand}>
+                    <View style={styles.containerExp}>
+                        <View style={styles.display}>
+                            <Image
+                                source={require('../../assets/iconProf.jpg')}
+                                style={styles.foto}
+                                resizeMode="contain"
+                            />
+                            <Text style={styles.title}>
+                               PROFESSOR 1
+                            </Text>
+
+                        </View>
+                    </View>
+                </TouchableOpacity>
+
+              
               <View style={styles.containerPgt}>
                     <Text style={styles.textPgt}>O Professor cumpre os horários ?</Text>
                   </View>
@@ -142,19 +171,31 @@ export default function Form() {
                   </View>
                   <View style={styles.containerCmt}>
                   <Text style={styles.titleCmt}>Comentários adicionais(opcional):</Text>
-                    <TextInput placeholder='Digite um comentário' style={styles.input}/>
+                    <TextInput placeholder='Digite um comentário' style={styles.input} 
+                    value={valorCmt}
+                    onChangeText={handleChangeTexto}/>
                   </View >
         
           </Animatable.View>
           <Animatable.View animation="fadeInUp" delay={200} style={styles.containerForm}>
               <View style={styles.containerProf}>
-                  <Image
-                      source={require('../../assets/iconProf.jpg')}
-                      style={{ width: '30%', height: '30%', }}
-                      resizeMode='contain' />
-                  <View>
-                      <Text style={styles.title}>PROFESSOR 2</Text>
-                  </View>
+              <TouchableOpacity style={styles.expand} onPress={toggleExpand2}>
+                    <View style={styles.containerExp}>
+                        <View style={styles.display}>
+                            <Image
+                                source={require('../../assets/iconProf.jpg')}
+                                style={styles.foto}
+                                resizeMode="contain"
+                            />
+                            <Text style={styles.title}>
+                               PROFESSOR 2
+                            </Text>
+
+                        </View>
+
+      
+                    </View>
+                </TouchableOpacity>
               </View>
               <View style={styles.containerPgt}>
                     <Text style={styles.textPgt}>O Professor cumpre os horários ?</Text>
@@ -232,16 +273,13 @@ export default function Form() {
                   </View >
           </Animatable.View>
               <View>
-                  <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Welcome')}>
+                  <TouchableOpacity style={styles.button} onPress={ () => navigation.navigate('FormConfirmed')} >
                       <Text style={styles.buttonText}>Enviar</Text>
                   </TouchableOpacity>
               </View>
           </ScrollView>
       </View>
       
-    
-    
-
   )
 }
 
@@ -251,16 +289,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#2F3C7E',
 
   },
-  slider:{
-   
-  },
+  foto:{
+    width: 100,
+    height: 100, // Ajuste as dimensões conforme necessário
+    margin: 5,
+},
   sliderThumb:{
     height:30,
     width:30,
+    backgroundColor:'black'
   },
   containerForm:{
     flex:4,
     backgroundColor: 'white',
+    marginBottom: 70
 
   },
   containerPgt:{
@@ -268,7 +310,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingStart: '5%',
     paddingEnd: '5%',
-    backgroundColor: '#f0f0f0'
+    backgroundColor: '#f0f0f0',
+    marginBottom: 20
   },
   containerCmt:{
     flex:2,
@@ -289,7 +332,7 @@ const styles = StyleSheet.create({
   containerProf:{
     flex:1,
     backgroundColor: '#f0f0f0',
-    alignItems: 'flex-start',
+    // alignItems: 'flex',
     flexDirection: 'row',
     paddingStart: '3%',
     paddingEnd: '3%',
@@ -305,13 +348,26 @@ const styles = StyleSheet.create({
     paddingStart: '5%',
     paddingEnd: '5%',
   },
-  title:{
-    fontSize: 24,
-    marginTop: 28,
-    marginBottom: 12,
-    justifyContent: 'center',
-    alignSelf: 'center',
+  containerExp: {
+    borderRadius: 25,
+    backgroundColor: 'white',
+    paddingBottom: 50,
+},
+expand: {
+  marginTop: 10,
+  borderRadius: 25,
   },
+display:{
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#F0F0F0'
+},
+title: {
+  fontSize: 17,
+  fontWeight: 'bold',
+  textAlign: 'center'
+
+},
   titleCmt:{
     fontSize: 17,
     fontWeight: 'bold',
