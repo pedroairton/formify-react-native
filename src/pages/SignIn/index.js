@@ -1,12 +1,41 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
+import {React, useState} from 'react'
 
+import axios from 'axios';
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
 
 
 export default function SignIn() {
+ 
+
+
   const navigation = useNavigation()
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const verificarCredenciais = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/'); 
+
+      const { data } = response;
+
+      const user = data.find((item) => item.email === email);
+
+      if (user) {
+        navigation.navigate('AdmBridge');
+      } else {
+        console.log('Credenciais inválidas', 'Por favor, verifique seu email e senha.');
+      }
+    } catch (error) {
+      console.log('Erro', 'Ocorreu um erro ao verificar as credenciais. Por favor, tente novamente mais tarde.');
+      navigation.navigate('AdmBridge');
+    }
+  };
+  
+
+
 
   return (
     <View style={styles.container}>
@@ -15,21 +44,24 @@ export default function SignIn() {
       </Animatable.View>
 
       <Animatable.View animation="fadeInUp" style={styles.containerForm}> 
-        <Text style={styles.title}>Email</Text>
-        <TextInput placeholder='Digite seu Email' style={styles.input}/>
+        <Text style={styles.title}>Login do administrador</Text>
+        <TextInput placeholder='Digite seu Login' style={styles.input}
+        value={email}
+        onChangeText={setEmail}/>
       
 
         <Text style={styles.title}>Senha</Text>
-        <TextInput placeholder='Digite sua senha' style={styles.input}/>
+        <TextInput placeholder='Digite a senha' style={styles.input} secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}/>
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Form')}>
+        <TouchableOpacity style={styles.button} onPress={() => verificarCredenciais(email, password)}>
           <Text style={styles.buttonText}>Acessar</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.buttonRegister}>
-          <Text style={styles.registerText}>Cadastrar-se</Text>
-        </TouchableOpacity>
+        
+        
       </Animatable.View>
+      
     </View>
   )
 }
@@ -38,6 +70,9 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     backgroundColor: '#2F3C7E'
+  },
+  containerBottom:{
+    backgroundColor: 'white'
   },
   containerHeader:{
     marginTop: '14%',
@@ -79,7 +114,7 @@ const styles = StyleSheet.create({
   buttonText:{
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold'
+    // fontWeight: 'bold'
   },
   buttonRegister:{
     marginTop: 14,

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,Image,TouchableOpacity,ScrollView, TextInput } from 'react-native'
+import { View, Text, StyleSheet,Image,TouchableOpacity,ScrollView, TextInput, Alert } from 'react-native'
 import React, {useState} from 'react'
 
 import * as Animatable from 'react-native-animatable'
@@ -6,7 +6,7 @@ import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
 import { Slider } from 'react-native-elements';
 
-export default function Form() {
+export default function Form({route}) {
   const navigation = useNavigation()
 
   const [value1, setValue1] = useState(5);
@@ -17,6 +17,7 @@ export default function Form() {
 
   const handleSliderChange1 = (newValue) => {
     setValue1(newValue);
+    setValues1([...values1, newValue]);
   };
   const handleSliderChange2 = (newValue) => {
     setValue2(newValue);
@@ -55,12 +56,6 @@ export default function Form() {
 
   const [valorCmt, setValorCmt] = useState('');
 
-  const handleSubmit = () => {
-    console.log('Valor do TextInput:', valorCmt);
-  };
-  const handleChangeTexto = (texto) => {
-    setValorInput(texto);
-  };
 
   const [expanded, setExpanded] = useState(false);
 
@@ -72,6 +67,62 @@ export default function Form() {
   const toggleExpand2 = () => {
       setExpanded2(!expanded2);
   }
+
+  const getDetails = (type) => {
+    if (route.params) {
+      switch (type) {
+        // case 'email':
+        //   return route.params.email;
+        case 'value1':
+          return route.params.value1;
+        case 'value2':
+          return route.params.value2;
+        case 'value3':
+          return route.params.value3;
+        case 'value4':
+          return route.params.value4;
+        case 'value5':
+          return route.params.value5;
+  
+
+      }
+    }
+    return '';
+  };
+  const [email, setEmail] = useState(getDetails('email'));
+
+
+  const submitData = async () => {
+    fetch('http://localhost:3000/send-data', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        value1,
+        value2,
+        value3,
+        value4,
+        value5,
+        // valorCmt,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+         Alert.alert(`${data.name} foi cadastrado com sucesso!`);
+        navigation.navigate('Welcome');
+        console.log('cadastrado', data)
+        console.log(data.email)
+        // console.log(data.password)
+        navigation.navigate('FormConfirmed')
+
+      })
+      .catch((err) => {
+         Alert.alert('Algo deu errado ao cadastrar' + err);
+        console.error('erro ao cadastrar', err)
+        navigation.navigate('Welcome');
+      });
+  };
   return (
     <View style={styles.container}>
         <ScrollView>
@@ -169,12 +220,15 @@ export default function Form() {
                       allowTouchTrack={true}
                   />
                   </View>
-                  <View style={styles.containerCmt}>
+                  <View style={styles.containerPgt}>
                   <Text style={styles.titleCmt}>Comentários adicionais(opcional):</Text>
-                    <TextInput placeholder='Digite um comentário' style={styles.input} 
-                    value={valorCmt}
-                    onChangeText={handleChangeTexto}/>
                   </View >
+                  <View style={styles.containerCmt}>
+                  <TextInput placeholder='Digite um comentário' style={styles.input} 
+                    value={valorCmt}
+                    onChangeText={setValorCmt}/>
+                  </View>
+                    
         
           </Animatable.View>
           <Animatable.View animation="fadeInUp" delay={200} style={styles.containerForm}>
@@ -257,7 +311,7 @@ export default function Form() {
                     <Text style={styles.textPgt}>O Professor se dispõe a ajudar alunos com dificuldades ?</Text>
                   </View >
                   <View style={styles.containerSlider}>
-                  <Slider
+                  <Slider style={styles.slider}
                       value={value10}
                       onValueChange={handleSliderChange10}
                       minimumValue={0}
@@ -267,13 +321,15 @@ export default function Form() {
                       allowTouchTrack={true}
                   />
                   </View>
-                  <View style={styles.containerCmt}>
-                  <Text style={styles.titleCmt}>Comentários adicionais(opcional):</Text>
-                    <TextInput placeholder='Digite um comentário' style={styles.input}/>
+                  <View style={styles.containerPgt}>
+                    <Text style={styles.titleCmt}>Comentários adicionais(opcional):</Text>
                   </View >
+                  <View style={styles.containerCmt}>
+                  <TextInput placeholder='Digite um comentário' style={styles.input}/>
+                  </View>
           </Animatable.View>
               <View>
-                  <TouchableOpacity style={styles.button} onPress={ () => navigation.navigate('FormConfirmed')} >
+                  <TouchableOpacity style={styles.button} onPress={ () => submitData()} >
                       <Text style={styles.buttonText}>Enviar</Text>
                   </TouchableOpacity>
               </View>
@@ -293,16 +349,23 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100, // Ajuste as dimensões conforme necessário
     margin: 5,
-},
+  },
+  slider:{
+      flex:1
+  },
+  sliderTxt:{
+      fontSize:15,
+  },
   sliderThumb:{
     height:30,
     width:30,
     backgroundColor:'black'
   },
   containerForm:{
-    flex:4,
+    flex:5,
     backgroundColor: 'white',
-    marginBottom: 70
+    marginBottom: 40,
+    marginTop: 40
 
   },
   containerPgt:{
@@ -311,14 +374,18 @@ const styles = StyleSheet.create({
     paddingStart: '5%',
     paddingEnd: '5%',
     backgroundColor: '#f0f0f0',
-    marginBottom: 20
+    marginBottom: 20,
+    marginTop: 20,
+
   },
   containerCmt:{
     flex:2,
     backgroundColor: 'white',
     paddingStart: '5%',
     paddingEnd: '5%',
-    backgroundColor: '#f0f0f0'
+    backgroundColor: '#f0f0f0',
+    marginBottom: 15,
+    // marginTop: 5
   },
   containerSlider:{
     flex:2,
@@ -328,6 +395,7 @@ const styles = StyleSheet.create({
   },
   textPgt:{
     fontSize: 17,
+    flex: 1
   },
   containerProf:{
     flex:1,
@@ -371,8 +439,8 @@ title: {
   titleCmt:{
     fontSize: 17,
     fontWeight: 'bold',
-    marginTop: 28,
-    marginBottom: 12,
+    flex: 1
+
   },
   titlePage:{
     fontSize: 24,

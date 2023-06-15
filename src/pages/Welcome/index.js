@@ -31,9 +31,9 @@ export default function Welcome() {
       });
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [data]);
+   useEffect(() => {
+     fetchData();
+   }, [data]);
 
 
 
@@ -56,16 +56,16 @@ export default function Welcome() {
 
     <Animatable.View delay={700} animation="fadeInUp" style={styles.containerForm}>
       <Text style={styles.title}>Formulário de Avaliação</Text>
-      <Text style={styles.text}>Faça o Login para começar.</Text>
+      <Text style={styles.text}></Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignIn')}>
-        <Text style={styles.buttonText}>Acessar</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Form')}>
+        <Text style={styles.buttonText}>Acessar o formulário</Text>
       </TouchableOpacity>
-      <View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Results')}>
-        <Text style={styles.buttonText}>Acessar resultados</Text>
-      </TouchableOpacity>
-      </View>
+      <View style={styles.containerBottom}>
+        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('SignIn')}>
+          <Text style={styles.registerText}>Acesso administrativo</Text>
+        </TouchableOpacity>
+        </View>
     </Animatable.View>
     </View>
   )
@@ -75,6 +75,18 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     backgroundColor: '#2F3C7E',
+  },
+  containerBottom:{
+    backgroundColor: 'white',
+    paddingBottom: 15
+  },
+  buttonRegister:{
+    marginTop: 14,
+    alignSelf: 'center',
+  },
+  registerText:{
+    color: '#a1a1a1',
+    marginTop: 1
   },
   containerLogo:{
     flex:2,
@@ -102,7 +114,7 @@ const styles = StyleSheet.create({
   text:{
     alignSelf: 'center',
     color: '#a1a1a1',
-    marginBottom: 80, //REMOVER DEPOIS -----------------------------------------------------------------------------------------------------
+     marginBottom: 80, //REMOVER DEPOIS -----------------------------------------------------------------------------------------------------
   },
   textLogo:{
     color: 'white',
