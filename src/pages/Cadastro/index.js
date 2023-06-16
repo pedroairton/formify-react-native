@@ -1,36 +1,44 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, FlatList } from 'react-native'
 import {React, useState} from 'react'
+import { Card, FAB, Button } from 'react-native-paper';
 
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector, useDispatch } from 'react-redux';
+
 
 
 export default function Cadastro({route}) {
-  const navigation = useNavigation()
-  
   const getDetails = (type) => {
+    
     if (route.params) {
       switch (type) {
-        //  case 'password':
-        //    return route.params.password;
+        case 'password':
+          return route.params.password;
         case 'email':
           return route.params.email;
-
       }
     }
     return '';
   };
-   const [password, setPassword] = useState(getDetails('password'));
+
+  const [password, setPassword] = useState(getDetails('password'));
   const [email, setEmail] = useState(getDetails('email'));
 
+  const navigation = useNavigation()
+  const { data, loading } = useSelector((state) => {
+    return state;
+  });
+
+
   const submitData = () => {
-    fetch('http://localhost:3000/send-data', {
+    fetch('http://localhost:3000/logins/send-data', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        //  password,
+        password,
         email,
       }),
     })
@@ -38,7 +46,7 @@ export default function Cadastro({route}) {
       .then((data) => {
          Alert.alert(`${data.name} foi cadastrado com sucesso!`);
         navigation.navigate('Welcome');
-        console.log('cadastrado', data)
+        console.log('Cadastrado:', data)
         console.log(data.email)
         console.log(data.password)
 
@@ -49,6 +57,59 @@ export default function Cadastro({route}) {
         navigation.navigate('Welcome');
       });
   };
+  const updateDetails = () => {
+    fetch('http://192.168.0.193:3000/logins/update', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: route.params._id,
+        password,
+        email,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        Alert.alert(`${data.name} foi editado com sucesso!`);
+        navigation.navigate('Welcome');
+      })
+      .catch((err) => {
+        Alert.alert('alguma coisa deu errado');
+      });
+  };
+  const fetchData = () => {
+    fetch('http://192.168.0.193:3000/logins')
+      .then((res) => res.json())
+      .then((results) => {
+        // setData(results)
+        // setLoading(false)
+        dispatch({ type: 'ADD_DATA', payload: results });
+        dispatch({ type: 'SET_LOADING', payload: false });
+        console.log('acessou todos os logins com sucesso!')
+      })
+      .catch((err) => {
+        Alert.alert('someting went wrong');
+      });
+  }
+  const renderList = (item) => {
+    return (
+      <View style={styles.containerUsers}>
+      <Card
+        style={styles.mycard}
+        onPress={() => navigation.navigate('Profiles', { item })}
+      >
+        <View style={styles.cardView}>
+          
+          <View style={{ marginLeft: 10 }}>
+            <Text style={styles.text}>Email: {item.email}</Text>
+            {/* <Text style={styles.text}>Senha:{item.password}</Text> */}
+          </View>
+        </View>
+      </Card>
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
@@ -57,16 +118,44 @@ export default function Cadastro({route}) {
 
       <Animatable.View animation="fadeInUp" style={styles.containerForm}> 
         <Text style={styles.title}>Email</Text>
-        <TextInput placeholder='Digite o Email à ser registrado' style={styles.input} onChangeText={(text) => setEmail(text)}/>
+        <TextInput placeholder='Digite o Email a ser registrado' value={email} style={styles.input} onChangeText={(text) => setEmail(text)}/>
       
 
-         {/* <Text style={styles.title}>Senha</Text>
-        <TextInput placeholder='Digite sua senha' style={styles.input} secureTextEntry={true} onChangeText={(text) => setPassword(text)}/>  */}
-
-        <TouchableOpacity style={styles.button} >
-          <Text style={styles.buttonText} onPress={() => submitData()}>Cadastrar email</Text>
-        </TouchableOpacity>
+        <Text style={styles.title}>Senha</Text>
+        <TextInput placeholder='Digite sua senha' value={password} style={styles.input} secureTextEntry={true} onChangeText={(text) => setPassword(text)}/>
+        {route.params ? (
+          <Button
+            style={styles.button}
+            mode="contained"
+            theme={'blue'}
+            onPress={() => updateDetails()}
+          >
+            Atualizar os Detalhes
+          </Button>
+        ) : (
+          <Button
+            style={styles.button}
+            mode="contained"
+            theme={'blue'}
+            onPress={() => submitData()}
+          >
+            Cadastrar email
+          </Button>
+        )}
+        <View style={styles.containerLowTitle}>
+          <Text style={styles.textUsuarios}>Usuários já cadastrados:</Text>
+        </View>
+        <FlatList
+        data={data}
+        renderItem={({ item }) => {
+          return renderList(item);
+        }}
+        keyExtractor={(item) => item._id}
+        onRefresh={() => fetchData()}
+        refreshing={loading}
+      />
       </Animatable.View>
+      
     </View>
   )
 }
@@ -76,10 +165,28 @@ const styles = StyleSheet.create({
     flex:1,
     backgroundColor: '#2F3C7E'
   },
+  containerLowTitle:{
+    marginTop:'3%', 
+    justifyContent:'center',
+    backgroundColor:'white',
+  },
+  textUsuarios:{
+    fontWeight:'bold',
+    fontSize:23,
+  },
   containerHeader:{
     marginTop: '14%',
     marginBottom: '8%',
     paddingStart: '5%',
+  },
+  containerUsers:{
+  marginTop: '2%',
+  backgroundColor:'white',
+  },
+  mycard:{
+    marginTop: '3%',
+    backgroundColor:'#2f3c7e',
+    paddingVertical: 10
   },
   message:{
     fontSize: 28,
@@ -124,5 +231,8 @@ const styles = StyleSheet.create({
   },
   registerText:{
     color: '#a1a1a1'
+  },
+  text:{
+    color:'white'
   }
 })

@@ -17,7 +17,6 @@ export default function Form({route}) {
 
   const handleSliderChange1 = (newValue) => {
     setValue1(newValue);
-    setValues1([...values1, newValue]);
   };
   const handleSliderChange2 = (newValue) => {
     setValue2(newValue);
@@ -55,6 +54,7 @@ export default function Form({route}) {
   };
 
   const [valorCmt, setValorCmt] = useState('');
+  const [valorCmt2, setValorCmt2] = useState('');
 
 
   const [expanded, setExpanded] = useState(false);
@@ -68,32 +68,30 @@ export default function Form({route}) {
       setExpanded2(!expanded2);
   }
 
-  const getDetails = (type) => {
-    if (route.params) {
-      switch (type) {
-        // case 'email':
-        //   return route.params.email;
-        case 'value1':
-          return route.params.value1;
-        case 'value2':
-          return route.params.value2;
-        case 'value3':
-          return route.params.value3;
-        case 'value4':
-          return route.params.value4;
-        case 'value5':
-          return route.params.value5;
+  // const getDetails = (type) => {
+  //   if (route.params) {
+  //     switch (type) {
+  //       // case 'email':
+  //       //   return route.params.email;
+  //       case 'value1':
+  //         return route.params.value1;
+  //       case 'value2':
+  //         return route.params.value2;
+  //       case 'value3':
+  //         return route.params.value3;
+  //       case 'value4':
+  //         return route.params.value4;
+  //       case 'value5':
+  //         return route.params.value5;
   
 
-      }
-    }
-    return '';
-  };
-  const [email, setEmail] = useState(getDetails('email'));
-
+  //     }
+  //   }
+  //   return '';
+  // };
 
   const submitData = async () => {
-    fetch('http://localhost:3000/send-data', {
+    fetch('http://localhost:3000/employees/send-data', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -104,6 +102,11 @@ export default function Form({route}) {
         value3,
         value4,
         value5,
+        value6,
+        value7,
+        value8,
+        value9,
+        value10,
         // valorCmt,
       }),
     })
@@ -111,8 +114,8 @@ export default function Form({route}) {
       .then((data) => {
          Alert.alert(`${data.name} foi cadastrado com sucesso!`);
         navigation.navigate('Welcome');
-        console.log('cadastrado', data)
-        console.log(data.email)
+        console.log('Dados do formulário enviados.', data)
+        // console.log(data.email)
         // console.log(data.password)
         navigation.navigate('FormConfirmed')
 
@@ -133,7 +136,6 @@ export default function Form({route}) {
 
 
         <TouchableOpacity style={styles.expand} onPress={toggleExpand}>
-                    <View style={styles.containerExp}>
                         <View style={styles.display}>
                             <Image
                                 source={require('../../assets/iconProf.jpg')}
@@ -145,7 +147,6 @@ export default function Form({route}) {
                             </Text>
 
                         </View>
-                    </View>
                 </TouchableOpacity>
 
               
@@ -218,23 +219,25 @@ export default function Form({route}) {
                       step={1}
                       thumbStyle={styles.sliderThumb}
                       allowTouchTrack={true}
+                      
                   />
                   </View>
-                  <View style={styles.containerPgt}>
+            
+                  {/* <View style={styles.containerPgt}>
                   <Text style={styles.titleCmt}>Comentários adicionais(opcional):</Text>
                   </View >
                   <View style={styles.containerCmt}>
                   <TextInput placeholder='Digite um comentário' style={styles.input} 
                     value={valorCmt}
                     onChangeText={setValorCmt}/>
-                  </View>
+                  </View> */}
                     
         
           </Animatable.View>
-          <Animatable.View animation="fadeInUp" delay={200} style={styles.containerForm}>
-              <View style={styles.containerProf}>
-              <TouchableOpacity style={styles.expand} onPress={toggleExpand2}>
-                    <View style={styles.containerExp}>
+          <Animatable.View animation="fadeInLeft" style={styles.containerForm}>
+              <Animatable.View animation="fadeInLeft" style={styles.containerProf}>
+                
+              <TouchableOpacity style={styles.expand2} onPress={toggleExpand2}>            
                         <View style={styles.display}>
                             <Image
                                 source={require('../../assets/iconProf.jpg')}
@@ -244,13 +247,10 @@ export default function Form({route}) {
                             <Text style={styles.title}>
                                PROFESSOR 2
                             </Text>
-
-                        </View>
-
-      
                     </View>
                 </TouchableOpacity>
-              </View>
+
+            </Animatable.View>
               <View style={styles.containerPgt}>
                     <Text style={styles.textPgt}>O Professor cumpre os horários ?</Text>
                   </View>
@@ -321,12 +321,14 @@ export default function Form({route}) {
                       allowTouchTrack={true}
                   />
                   </View>
-                  <View style={styles.containerPgt}>
+                  {/* <View style={styles.containerPgt}>
                     <Text style={styles.titleCmt}>Comentários adicionais(opcional):</Text>
                   </View >
                   <View style={styles.containerCmt}>
-                  <TextInput placeholder='Digite um comentário' style={styles.input}/>
-                  </View>
+                  <TextInput placeholder='Digite um comentário' style={styles.input} 
+                    value={valorCmt2}
+                    onChangeText={setValorCmt2}/>
+                  </View> */}
           </Animatable.View>
               <View>
                   <TouchableOpacity style={styles.button} onPress={ () => submitData()} >
@@ -340,18 +342,13 @@ export default function Form({route}) {
 }
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
+  container: {
+    flex: 1,
     backgroundColor: '#2F3C7E',
-
-  },
-  foto:{
-    width: 100,
-    height: 100, // Ajuste as dimensões conforme necessário
-    margin: 5,
+    padding: 10,
   },
   slider:{
-      flex:1
+    flex:1
   },
   sliderTxt:{
       fontSize:15,
@@ -361,119 +358,88 @@ const styles = StyleSheet.create({
     width:30,
     backgroundColor:'black'
   },
-  containerForm:{
-    flex:5,
-    backgroundColor: 'white',
-    marginBottom: 40,
-    marginTop: 40
-
-  },
-  containerPgt:{
-    flex:2,
-    backgroundColor: 'white',
-    paddingStart: '5%',
-    paddingEnd: '5%',
-    backgroundColor: '#f0f0f0',
-    marginBottom: 20,
-    marginTop: 20,
-
-  },
-  containerCmt:{
-    flex:2,
-    backgroundColor: 'white',
-    paddingStart: '5%',
-    paddingEnd: '5%',
-    backgroundColor: '#f0f0f0',
-    marginBottom: 15,
-    // marginTop: 5
-  },
-  containerSlider:{
-    flex:2,
-    backgroundColor: 'white',
-    paddingStart: '5%',
-    paddingEnd: '20%',
-  },
-  textPgt:{
-    fontSize: 17,
-    flex: 1
-  },
-  containerProf:{
-    flex:1,
-    backgroundColor: '#f0f0f0',
-    // alignItems: 'flex',
-    flexDirection: 'row',
-    paddingStart: '3%',
-    paddingEnd: '3%',
-    marginBottom: 10,
-    paddingTop: 10,
-    marginTop:10,
-
-  },
-
-  containerTop:{
-    flex:1,
+  containerTop: {
+    flex: 1,
     backgroundColor: '#2F3C7E',
-    paddingStart: '5%',
-    paddingEnd: '5%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  containerExp: {
-    borderRadius: 25,
-    backgroundColor: 'white',
-    paddingBottom: 50,
-},
-expand: {
-  marginTop: 10,
-  borderRadius: 25,
+  foto:{
+    width: 100,
+    height: 100, 
+    margin: 5,
   },
-display:{
-  flexDirection: 'row',
-  alignItems: 'center',
-  backgroundColor: '#F0F0F0'
-},
-title: {
-  fontSize: 17,
-  fontWeight: 'bold',
-  textAlign: 'center'
-
-},
-  titleCmt:{
-    fontSize: 17,
-    fontWeight: 'bold',
-    flex: 1
-
-  },
-  titlePage:{
+  titlePage: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 28,
     marginBottom: 12,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    color: 'white'
-
+    color: 'white',
   },
-  text:{
-    color: '#a1a1a1'
+  containerForm: {
+    flex: 8,
+    backgroundColor: 'white',
+    marginVertical: '5%',
+    padding: 10,
+    borderRadius: 8,
   },
-  button:{
+  containerPgt: {
+    backgroundColor: '#f0f0f0',
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 8,
+  },
+  textPgt: {
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  containerSlider: {
+    padding: 10,
+  },
+  containerProf: {
+    backgroundColor: '#f0f0f0',
+    flexDirection: 'row',
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 8,
+  },
+  expand: {
+    borderRadius: 25,
+    backgroundColor: 'white',
+    marginBottom: 10,
+    borderRadius: 8,
+  },
+  containerExp: {
+    paddingBottom: 50,
+  },
+  display: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+  },
+  title: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  button: {
     marginTop: 20,
     backgroundColor: '#FFD700',
     borderRadius: 8,
     paddingVertical: 8,
     width: '90%',
     alignSelf: 'center',
-    bottom: '15%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonText:{
+  buttonText: {
     fontSize: 16,
-    color: 'black'
+    color: 'black',
   },
-  input:{
+  input: {
     borderBottomWidth: 1,
     height: 40,
     marginBottom: 12,
     fontSize: 16,
-  }
-})
+  },
+});

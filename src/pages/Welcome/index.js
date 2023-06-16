@@ -17,14 +17,28 @@ export default function Welcome() {
   console.log(data, loading);
 
   const fetchData = () => {
-    fetch('http://192.168.0.193:3000/')
+    fetch('http://192.168.0.193:3000/employees')
       .then((res) => res.json())
       .then((results) => {
         // setData(results)
         // setLoading(false)
         dispatch({ type: 'ADD_DATA', payload: results });
         dispatch({ type: 'SET_LOADING', payload: false });
-        console.log('entrou!')
+        console.log('Conectado ao banco do formulário!')
+      })
+      .catch((err) => {
+        Alert.alert('someting went wrong');
+      });
+  };
+  const fetchData2 = () => {
+    fetch('http://192.168.0.193:3000/logins')
+      .then((res) => res.json())
+      .then((results) => {
+        // setData(results)
+        // setLoading(false)
+        dispatch({ type: 'ADD_DATA', payload: results });
+        dispatch({ type: 'SET_LOADING', payload: false });
+        console.log('Conectado ao banco de usuários!')
       })
       .catch((err) => {
         Alert.alert('someting went wrong');
@@ -33,7 +47,11 @@ export default function Welcome() {
 
    useEffect(() => {
      fetchData();
-   }, [data]);
+   }, []);
+
+   useEffect(() => {
+    fetchData2();
+  }, []);
 
 
 
@@ -58,11 +76,11 @@ export default function Welcome() {
       <Text style={styles.title}>Formulário de Avaliação</Text>
       <Text style={styles.text}></Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Form')}>
-        <Text style={styles.buttonText}>Acessar o formulário</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignIn')}>
+        <Text style={styles.buttonText}>Acessar</Text>
       </TouchableOpacity>
       <View style={styles.containerBottom}>
-        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('SignIn')}>
+        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('SignInAdm')}>
           <Text style={styles.registerText}>Acesso administrativo</Text>
         </TouchableOpacity>
         </View>

@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 export default function AdmBridge() {
     const navigation = useNavigation()
 
+    
     return (
         <View style={styles.container}>
         <View style={styles.containerOut}>
@@ -19,7 +20,7 @@ export default function AdmBridge() {
               
               <View style={styles.containerDesc}>
               <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Cadastro')}>
-                      <Text style={styles.buttonText}>Cadastrar Email de aluno</Text>
+                      <Text style={styles.buttonText}>Gerenciar Emails de aluno</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Results')}>
                       <Text style={styles.buttonText}>Ver os Resultados</Text>

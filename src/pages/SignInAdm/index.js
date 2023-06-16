@@ -6,7 +6,7 @@ import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
 
 
-export default function SignIn() {
+export default function SignInAdm() {
  
 
 
@@ -15,28 +15,13 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const verificarCredenciais = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/logins'); 
-
-      const { data } = response;
-
-      const user = data.find((item) => item.email === email && item.password === password);
-
-      if (user) {
-        console.log('Credenciais aceitas. acessando formulário')
-        navigation.navigate('Form');
-      } else {
-        console.log('Credenciais inválidas', 'Por favor, verifique seu email e senha.');
-       // navigation.navigate('Form'); // testando
-      }
-      
-    } catch (error) {
-      console.log('Erro', 'Ocorreu um erro ao verificar as credenciais. Por favor, tente novamente mais tarde.');
-      navigation.navigate('Form');
-      // navigation.navigate('Form'); // testando
+const verificarAdm = () => {
+    if(email==='adm' && password==='123'){
+      navigation.navigate('AdmBridge')
+    }else{
+      console.log('Login administrativo incorreto!')
     }
-  };
+}
   
 
 
@@ -48,18 +33,18 @@ export default function SignIn() {
       </Animatable.View>
 
       <Animatable.View animation="fadeInUp" style={styles.containerForm}> 
-        <Text style={styles.title}>Email</Text>
-        <TextInput placeholder='Digite seu Email' style={styles.input}
+        <Text style={styles.title}>Login administrativo</Text>
+        <TextInput placeholder='Digite o Login de administrador' style={styles.input}
         value={email}
         onChangeText={setEmail}/>
       
 
         <Text style={styles.title}>Senha</Text>
-        <TextInput placeholder='Digite a senha' style={styles.input} secureTextEntry={true}
+        <TextInput placeholder='Digite a senha de administrador' style={styles.input} secureTextEntry={true}
         value={password}
         onChangeText={setPassword}/>
 
-        <TouchableOpacity style={styles.button} onPress={() => verificarCredenciais(email, password)}>
+        <TouchableOpacity style={styles.button} onPress={() => verificarAdm()}>
           <Text style={styles.buttonText}>Acessar</Text>
         </TouchableOpacity>
         
