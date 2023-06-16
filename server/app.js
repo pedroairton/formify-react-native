@@ -9,6 +9,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use(cors());
 
 const Employee = mongoose.model('employee');
+const Login = mongoose.model("login")
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -20,31 +21,50 @@ mongoose.connect(DB, {
 });
 
 mongoose.connection.on('connected', () => {
-  console.log('connected to mongo yeahhh');
+  console.log('connected to mongo');
 });
 mongoose.connection.on('error', (err) => {
   console.log('error', err);
 });
 
-app.get('/', (req, res) => {
+app.get('/employees', (req, res) => {
   Employee.find({})
     .then((data) => {
       res.send(data);
-      console.log('Conectou-se com sucesso ao banco')
+      console.log('Conectou-se com sucesso ao banco de respostas')
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+app.get('/logins', (req, res) => {
+  Login.find({})
+    .then((data) => {
+      res.send(data);
+      console.log('Conectou-se com sucesso ao banco de logins')
     })
     .catch((err) => {
       console.log(err);
     });
 });
 
-app.post('/send-data', (req, res) => {
+
+app.post('/employees/send-data', (req, res) => {
   const employee = new Employee({
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    picture: req.body.picture,
-    salary: req.body.salary,
-    position: req.body.position,
+    //  password: req.body.password,
+    // email: req.body.email,
+    value1: req.body.value1,
+    value2: req.body.value2,
+    value3: req.body.value3,
+    value4: req.body.value4,
+    value5: req.body.value5,
+    value6: req.body.value6,
+    value7: req.body.value7,
+    value8: req.body.value8,
+    value9: req.body.value9,
+    value10: req.body.value10,
+    // valorCmt: req.body.cmt,
+
   });
   employee
     .save()
@@ -56,9 +76,15 @@ app.post('/send-data', (req, res) => {
       console.log(err);
     });
 });
+app.post('/logins/send-data', (req, res) => {
+  const login = new Login({
+    password: req.body.password,
+    email: req.body.email,
+    // valorCmt: req.body.cmt,
 
-app.post('/delete', (req, res) => {
-  Employee.findByIdAndRemove(req.body.id)
+  });
+  login
+    .save()
     .then((data) => {
       console.log(data);
       res.send(data);
@@ -68,14 +94,21 @@ app.post('/delete', (req, res) => {
     });
 });
 
-app.post('/update', (req, res) => {
-  Employee.findByIdAndUpdate(req.body.id, {
-    name: req.body.name,
+app.post('/logins/delete', (req, res) => {
+  Login.findByIdAndRemove(req.body.id)
+    .then((data) => {
+      console.log(data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.post('/logins/update', (req, res) => {
+  Login.findByIdAndUpdate(req.body.id, {
+    password: req.body.password,
     email: req.body.email,
-    phone: req.body.phone,
-    picture: req.body.picture,
-    salary: req.body.salary,
-    position: req.body.position,
   })
     .then((data) => {
       console.log(data);
