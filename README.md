@@ -7,6 +7,8 @@ Gráficos.
 
 Uso: 
 
+Alterar o endereço das operações padrão (192.168.0.193) para o endereço com seu ipv4
+
 Instalar todas as dependências necessárias com "npm install"
 
 Instalar o Expo
