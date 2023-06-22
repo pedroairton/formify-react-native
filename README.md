@@ -3,7 +3,9 @@ Aplicativo FormiFy, Feito em React Native para avaliação de professores via fo
 atualização e deleção de usuários, além de visualização da média dos Resultados da média das avaliações em forma de
 Gráficos.
 
-Uso:
+(APÓS QUALQUER ALTERAÇÃO DE CRUD NO APP, SEJA DELETE, UPDATE, ETC, RECARREGAR O APP PARA VER AS MUDANÇAS)
+
+Uso: 
 
 Instalar todas as dependências necessárias com "npm install"
 
