@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import * as Progress from 'react-native-progress';
 import React, { useEffect, useState } from 'react';
 
@@ -19,13 +19,17 @@ export default function Results() {
   useEffect(() => {
     const variables = ['value1', 'value2', 'value3', 'value4', 'value5', 'value6', 'value7', 'value8', 'value9', 'value10'];
 
-    axios.get('http://localhost:3000/employees')
+    axios.get('http://192.168.0.193:3000/form')
       .then((response) => {
         const { data } = response;
 
         if (data.length === 0) {
-          console.log('Não há dados suficientes para calcular as médias.');
+          Alert.alert('Não há nenhum dado para calcular as médias. Faça um envio pelo formulário!');
+          console.log('Não há nenhum dado para calcular as médias. Faça um envio pelo formulário!');
           return;
+        } else {
+          Alert.alert('Dados recuperados com sucesso!');
+          console.log('Dados recuperados com sucesso, para ver as médias clique em algum professor!');
         }
 
         const newProgresses1to5 = variables.slice(0, 5).map((variable) => {
@@ -71,26 +75,34 @@ export default function Results() {
   return (
     <View style={styles.container}>
       <ScrollView>
+       
         <Animatable.View animation="fadeInLeft" style={styles.containerTop}>
           <Text style={styles.titlePage}>RESULTADOS</Text>
         </Animatable.View>
         {/* <View style={styles.containerOut} /> */}
 
         <View style={styles.containerForm}>
+        <Text style={styles.titleB}>Para ver as médias, clique em um professor:</Text>
           <TouchableOpacity style={styles.expand} onPress={toggleExpand}>
             <View style={styles.containerExp}>
               <View style={styles.display}>
                 <Image
-                  source={require('../../assets/iconProf.jpg')}
+                  source={require('../../assets/iconP1.png')}
                   style={styles.foto}
                   resizeMode="contain"
                 />
-                <Text style={styles.title}>PROFESSOR 1</Text>
+                <Text style={styles.title}>PROFESSOR SILVA</Text>
               </View>
 
               {expanded && (
                 <View style={styles.details}>
+                  
                   <Text style={styles.detailsText}>Médias</Text>
+                  <View>
+                        <Text style={styles.detailsText}>GERAL: {((progresses1to5[0]+progresses1to5[1]+progresses1to5[2]+progresses1to5[3]+progresses1to5[4])/5*10).toFixed(1)}</Text>
+                        <Progress.Bar progress={(progresses1to5[0]+progresses1to5[1]+progresses1to5[2]+progresses1to5[3]+progresses1to5[4])/5} 
+                        width={250} height={20} marginBottom={15} />
+                  </View>
                   {progresses1to5.map((progress, index) => (
                     <View key={index} style={styles.progressContainer}>
                       <Text
@@ -98,8 +110,10 @@ export default function Results() {
                       >
                         {texts1to5WithProgress[index]}
                       </Text>
-                      <Progress.Bar progress={progress} width={200} height={20} marginBottom={15} />
+                      <Progress.Bar progress={progress} width={200} height={15} marginBottom={15} />
+
                     </View>
+
                   ))}
                 </View>
               )}
@@ -109,16 +123,21 @@ export default function Results() {
             <View style={styles.containerExp}>
               <View style={styles.display}>
                 <Image
-                  source={require('../../assets/iconProf.jpg')}
+                  source={require('../../assets/iconP2.png')}
                   style={styles.foto}
                   resizeMode="contain"
                 />
-                <Text style={styles.title}>PROFESSOR 2</Text>
+                <Text style={styles.title}>PROFESSOR GUEDES</Text>
               </View>
 
               {expanded2 && (
                 <View style={styles.details}>
                   <Text style={styles.detailsText}>Médias</Text>
+                  <View>
+                        <Text style={styles.detailsText}>GERAL: {((progresses6to10[0]+progresses6to10[1]+progresses6to10[2]+progresses6to10[3]+progresses6to10[4])/5*10).toFixed(1)}</Text>
+                        <Progress.Bar progress={(progresses6to10[0]+progresses6to10[1]+progresses6to10[2]+progresses6to10[3]+progresses6to10[4])/5} 
+                        width={250} height={20} marginBottom={15} />
+                  </View>
                   {progresses6to10.map((progress, index) => (
                     <View key={index} style={styles.progressContainer}>
                       <Text
@@ -126,7 +145,7 @@ export default function Results() {
                       >
                         {texts6to10WithProgress[index]}
                       </Text>
-                      <Progress.Bar progress={progress} width={200} height={20} marginBottom={15} />
+                      <Progress.Bar progress={progress} width={200} height={15} marginBottom={15} />
                     </View>
                   ))}
                 </View>
@@ -204,17 +223,24 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     textAlign: 'center'
-
+  },
+  titleB:{
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#b0b0b0'
   },
   details: {
     marginTop: 10,
-    borderRadius: 25
+    borderRadius: 25,
+    backgroundColor: '#f0f0f0',
+    paddingStart: '3%',
   },
   expand: {
     marginTop: 10,
     borderRadius: 25,
   },
   detailsText: {
+    marginTop: '2%',
     fontSize: 17,
     fontWeight: 'bold',
     color: '#333333',

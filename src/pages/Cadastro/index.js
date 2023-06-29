@@ -5,6 +5,8 @@ import { Card, FAB, Button } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+
 
 
 
@@ -26,13 +28,16 @@ export default function Cadastro({route}) {
   const [email, setEmail] = useState(getDetails('email'));
 
   const navigation = useNavigation()
-  const { data, loading } = useSelector((state) => {
-    return state;
+  const data = useSelector((state) => {
+    return state.data
+  });
+  const loading = useSelector((state) => {
+    return state.loading;
   });
 
 
   const submitData = () => {
-    fetch('http://localhost:3000/logins/send-data', {
+    fetch('http://192.168.0.193:3000/logins/send-data', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -44,8 +49,8 @@ export default function Cadastro({route}) {
     })
       .then((res) => res.json())
       .then((data) => {
-         Alert.alert(`${data.name} foi cadastrado com sucesso!`);
-        navigation.navigate('Welcome');
+         Alert.alert(`${data.email} foi cadastrado com sucesso!`);
+        navigation.navigate('Welcome',{ timestamp: Date.now() });
         console.log('Cadastrado:', data)
         console.log(data.email)
         console.log(data.password)
@@ -54,8 +59,9 @@ export default function Cadastro({route}) {
       .catch((err) => {
          Alert.alert('Algo deu errado ao cadastrar' + err);
         console.error('erro ao cadastrar', err)
-        navigation.navigate('Welcome');
+        navigation.navigate('Welcome',{ timestamp: Date.now() });
       });
+      
   };
   const updateDetails = () => {
     fetch('http://192.168.0.193:3000/logins/update', {
@@ -69,15 +75,19 @@ export default function Cadastro({route}) {
         email,
       }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        Alert.alert(`${data.name} foi editado com sucesso!`);
-        navigation.navigate('Welcome');
+      .then(res => res.json())
+      .then(data => {
+        Alert.alert(`${data.email} foi editado com sucesso!`);
+        console.log(`${data.email} foi editado com sucesso!`);
+        navigation.navigate('Welcome',{ timestamp: Date.now() });
       })
       .catch((err) => {
-        Alert.alert('alguma coisa deu errado');
+        console.err('algo deu errado,', err)
+        Alert.alert('erro ao editar');
       });
+      
   };
+  const dispatch = useDispatch();
   const fetchData = () => {
     fetch('http://192.168.0.193:3000/logins')
       .then((res) => res.json())
@@ -86,12 +96,11 @@ export default function Cadastro({route}) {
         // setLoading(false)
         dispatch({ type: 'ADD_DATA', payload: results });
         dispatch({ type: 'SET_LOADING', payload: false });
-        console.log('acessou todos os logins com sucesso!')
       })
       .catch((err) => {
         Alert.alert('someting went wrong');
       });
-  }
+  };
   const renderList = (item) => {
     return (
       <View style={styles.containerUsers}>
@@ -102,7 +111,7 @@ export default function Cadastro({route}) {
         <View style={styles.cardView}>
           
           <View style={{ marginLeft: 10 }}>
-            <Text style={styles.text}>Email: {item.email}</Text>
+            <Text style={styles.text}>EMAIL: {item.email}</Text>
             {/* <Text style={styles.text}>Senha:{item.password}</Text> */}
           </View>
         </View>
@@ -113,38 +122,11 @@ export default function Cadastro({route}) {
   return (
     <View style={styles.container}>
       <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
-        <Text style={styles.message}>Cadastrar aluno</Text>
+        <Text style={styles.message}>Usuários Cadastrados</Text>
       </Animatable.View>
 
       <Animatable.View animation="fadeInUp" style={styles.containerForm}> 
-        <Text style={styles.title}>Email</Text>
-        <TextInput placeholder='Digite o Email a ser registrado' value={email} style={styles.input} onChangeText={(text) => setEmail(text)}/>
-      
-
-        <Text style={styles.title}>Senha</Text>
-        <TextInput placeholder='Digite sua senha' value={password} style={styles.input} secureTextEntry={true} onChangeText={(text) => setPassword(text)}/>
-        {route.params ? (
-          <Button
-            style={styles.button}
-            mode="contained"
-            theme={'blue'}
-            onPress={() => updateDetails()}
-          >
-            Atualizar os Detalhes
-          </Button>
-        ) : (
-          <Button
-            style={styles.button}
-            mode="contained"
-            theme={'blue'}
-            onPress={() => submitData()}
-          >
-            Cadastrar email
-          </Button>
-        )}
-        <View style={styles.containerLowTitle}>
-          <Text style={styles.textUsuarios}>Usuários já cadastrados:</Text>
-        </View>
+        
         <FlatList
         data={data}
         renderItem={({ item }) => {
@@ -154,6 +136,16 @@ export default function Cadastro({route}) {
         onRefresh={() => fetchData()}
         refreshing={loading}
       />
+      
+          <Button
+            style={styles.button}
+            mode="contained"
+            theme={'blue'}
+            onPress={() => navigation.navigate('Cadastrar')}
+          >
+          Cadastrar novo Email
+          </Button>
+        
       </Animatable.View>
       
     </View>
@@ -216,7 +208,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 4,
     paddingVertical: 8,
-    marginTop: 14,
+    marginVertical: 14,
     justifyContent: 'center',
     alignItems: 'center'
   },

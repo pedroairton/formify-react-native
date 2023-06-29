@@ -1,23 +1,27 @@
-import { View, Text, StyleSheet,Image,TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet,Image,TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 
 import * as Animatable from 'react-native-animatable'
 
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
+
 
 export default function Welcome() {
 
   const dispatch = useDispatch();
-  const { data, loading } = useSelector((state) => {
-    return state;
+  const data = useSelector((state) => {
+    return state.data
+  });
+  const loading = useSelector((state) => {
+    return state.loading;
   });
 
-  console.log(data, loading);
+  console.log(data);
 
   const fetchData = () => {
-    fetch('http://192.168.0.193:3000/employees')
+    fetch('http://192.168.0.193:3000/form')
       .then((res) => res.json())
       .then((results) => {
         // setData(results)
@@ -25,9 +29,11 @@ export default function Welcome() {
         dispatch({ type: 'ADD_DATA', payload: results });
         dispatch({ type: 'SET_LOADING', payload: false });
         console.log('Conectado ao banco do formulário!')
+        // Alert.alert('Conectou-se ao banco do formulário.')
       })
       .catch((err) => {
-        Alert.alert('someting went wrong');
+        Alert.alert('Erro ao conectar-se ao banco do formulário, verifique o endereço do fetch');
+        console.log('Erro ao conectar-se ao banco do formulário, verifique o endereço do fetch');
       });
   };
   const fetchData2 = () => {
@@ -41,19 +47,21 @@ export default function Welcome() {
         console.log('Conectado ao banco de usuários!')
       })
       .catch((err) => {
-        Alert.alert('someting went wrong');
+        Alert.alert('Erro ao conectar-se ao banco dos usuários, verifique o endereço do fetch');
+        console.log('Erro ao conectar-se ao banco dos usuários, verifique o endereço do fetch');
       });
   };
 
-   useEffect(() => {
-     fetchData();
-   }, []);
-
-   useEffect(() => {
-    fetchData2();
-  }, []);
-
-
+  useEffect(() => {
+    fetchData()
+    fetchData2()
+  }, [])
+  
+const att = () => {
+  fetchData()
+  fetchData2()
+  navigation.navigate('SignInAdm')
+}
 
 
   const navigation = useNavigation()
@@ -80,7 +88,7 @@ export default function Welcome() {
         <Text style={styles.buttonText}>Acessar</Text>
       </TouchableOpacity>
       <View style={styles.containerBottom}>
-        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('SignInAdm')}>
+        <TouchableOpacity style={styles.buttonRegister} onPress={att}>
           <Text style={styles.registerText}>Acesso administrativo</Text>
         </TouchableOpacity>
         </View>

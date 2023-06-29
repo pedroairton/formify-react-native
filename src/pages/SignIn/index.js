@@ -17,23 +17,25 @@ export default function SignIn() {
 
   const verificarCredenciais = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/logins'); 
+      const response = await axios.get('http://192.168.0.193:3000/logins'); 
 
       const { data } = response;
 
       const user = data.find((item) => item.email === email && item.password === password);
 
       if (user) {
-        console.log('Credenciais aceitas. acessando formulário')
-        navigation.navigate('Form');
+        console.log('Credenciais aceitas. acessando formulários')
+        // Alert.alert('Credenciais aceitas. acessando formulários')
+        navigation.navigate('FormSelect',{email,password});
       } else {
-        console.log('Credenciais inválidas', 'Por favor, verifique seu email e senha.');
+        console.log('Credenciais inválidas, verifique seu email e senha, Caso queira se cadastrar solicite ao administrador.');
+        Alert.alert('Credenciais inválidas, verifique seu email e senha, Caso queira se cadastrar solicite ao administrador.');
        // navigation.navigate('Form'); // testando
       }
       
     } catch (error) {
-      console.log('Erro', 'Ocorreu um erro ao verificar as credenciais. Por favor, tente novamente mais tarde.');
-      navigation.navigate('Form');
+      console.log('Erro', 'Ocorreu um erro ao verificar as credenciais. verifique sua conexão com o banco de dados.');
+      Alert.alert('Erro', 'Ocorreu um erro ao verificar as credenciais. verifique sua conexão com o banco de dados.');
       // navigation.navigate('Form'); // testando
     }
   };

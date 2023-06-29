@@ -14,8 +14,10 @@ export default function AdmBridge() {
     return (
         <View style={styles.container}>
         <View style={styles.containerOut}>
-            
-        </View>
+            <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
+                <Text style={styles.message}>Painel do Administrador:</Text>
+            </Animatable.View>
+           </View>
         <Animatable.View animation="fadeInLeft" style={styles.containerForm}>
               
               <View style={styles.containerDesc}>
@@ -66,7 +68,16 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25
   },
-  
+  containerHeader:{
+    marginTop: '14%',
+    marginBottom: '8%',
+    paddingStart: '5%',
+  },
+  message:{
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
   title:{
     fontSize: 19,
     fontWeight: 'bold',

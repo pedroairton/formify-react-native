@@ -91,7 +91,7 @@ export default function Form({route}) {
   // };
 
   const submitData = async () => {
-    fetch('http://localhost:3000/employees/send-data', {
+    fetch('http://192.168.0.193:3000/form/send-data', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -112,17 +112,17 @@ export default function Form({route}) {
     })
       .then((res) => res.json())
       .then((data) => {
-         Alert.alert(`${data.name} foi cadastrado com sucesso!`);
+         Alert.alert(`Formulário enviado com sucesso!`);
         navigation.navigate('Welcome');
-        console.log('Dados do formulário enviados.', data)
+        console.log('Dados do formulário enviados com sucesso!:', data)
         // console.log(data.email)
         // console.log(data.password)
         navigation.navigate('FormConfirmed')
 
       })
       .catch((err) => {
-         Alert.alert('Algo deu errado ao cadastrar' + err);
-        console.error('erro ao cadastrar', err)
+         Alert.alert('Algo deu errado ao enviar o formulário.');
+        console.error('Erro ao enviar formulário:', err)
         navigation.navigate('Welcome');
       });
   };
@@ -138,12 +138,12 @@ export default function Form({route}) {
         <TouchableOpacity style={styles.expand} onPress={toggleExpand}>
                         <View style={styles.display}>
                             <Image
-                                source={require('../../assets/iconProf.jpg')}
+                                source={require('../../assets/iconP1.png')}
                                 style={styles.foto}
                                 resizeMode="contain"
                             />
                             <Text style={styles.title}>
-                               PROFESSOR 1
+                               PROFESSOR SILVA
                             </Text>
 
                         </View>
@@ -240,12 +240,12 @@ export default function Form({route}) {
               <TouchableOpacity style={styles.expand2} onPress={toggleExpand2}>            
                         <View style={styles.display}>
                             <Image
-                                source={require('../../assets/iconProf.jpg')}
+                                source={require('../../assets/iconP2.png')}
                                 style={styles.foto}
                                 resizeMode="contain"
                             />
                             <Text style={styles.title}>
-                               PROFESSOR 2
+                               PROFESSOR GUEDES
                             </Text>
                     </View>
                 </TouchableOpacity>

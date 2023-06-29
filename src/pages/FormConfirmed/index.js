@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     flex:5.5,
     backgroundColor: 'white',
     borderRadius: 25
-    
   },
   containerOut:{
     flex:4,

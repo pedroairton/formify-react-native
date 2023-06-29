@@ -22,6 +22,7 @@ const Profiles = (props) => {
             .then(res => res.json())
             .then(deletedEmp => {
                 console.log(`Usuário ${deletedEmp.email} deletado!`)
+                Alert.alert(`Usuário ${deletedEmp.email} deletado!`)
                 props.navigation.navigate("Welcome")
             })
             .catch(err => {
@@ -36,8 +37,14 @@ const Profiles = (props) => {
     //     }
     // }
     return (
-        <View style={styles.root}>
-           
+        <View style={styles.container}>
+
+           <View style={styles.containerOut}>
+            <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
+                <Text style={styles.message}>Perfil do Usuário:</Text>
+            </Animatable.View>
+           </View>
+
            <Animatable.View animation="fadeInLeft" style={styles.containerItem}>
            <View>
                     <Text style={styles.textInfo}>Email:</Text>
@@ -66,7 +73,7 @@ const Profiles = (props) => {
                     theme={theme}
                     style={styles.button}
                     onPress={() => {
-                        props.navigation.navigate("Cadastro",
+                        props.navigation.navigate("Cadastrar",
                             { _id, email, password }
                         )
                     }}>Editar
@@ -80,9 +87,6 @@ const Profiles = (props) => {
             </View>
            </Animatable.View>
            <View style={styles.containerOut}></View>
-            
-
-
         </View>
     )
 }
@@ -95,7 +99,7 @@ const theme = {
 
 
 const styles = StyleSheet.create({
-    root: {
+    container: {
         flex: 1,
         backgroundColor: '#2f3c7e'
     },
@@ -107,10 +111,21 @@ const styles = StyleSheet.create({
         marginTop: 14,
       },
     containerItem: {
-        flex: 1,
+        flex: 2,
         backgroundColor: 'white',
-        borderBottomLeftRadius:25,
-        borderBottomRightRadius:25
+        borderRadius: 25,
+        paddingStart: '3%',
+        paddingEnd: '3%'
+    },
+    containerHeader:{
+        marginTop: '14%',
+        marginBottom: '8%',
+        paddingStart: '5%',
+    },
+    message:{
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: 'white',
     },
     containerOut: {
         flex: 1,
@@ -135,7 +150,8 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         marginTop: 3,
         marginLeft: 5,
-        color:'black'
+        color:'black',
+        marginTop: '5%'
     }
 })
 export default Profiles

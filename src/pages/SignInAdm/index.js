@@ -18,8 +18,11 @@ export default function SignInAdm() {
 const verificarAdm = () => {
     if(email==='adm' && password==='123'){
       navigation.navigate('AdmBridge')
+      console.log('Login aceito! Acessando área de administrador.')
+      // Alert.alert('Login aceito! Acessando área de administrador.')
     }else{
       console.log('Login administrativo incorreto!')
+      Alert.alert('Login administrativo incorreto!')
     }
 }
   
