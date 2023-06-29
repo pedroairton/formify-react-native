@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const EmpoyeeSchema = new mongoose.Schema({
+const FormSchema = new mongoose.Schema({
     email:String,
     value1:Number,
     value2:Number,
@@ -23,5 +23,5 @@ const LoginSchema = new mongoose.Schema({
 
 
 
-mongoose.model("form",EmpoyeeSchema)
+mongoose.model("form",FormSchema)
 mongoose.model("login",LoginSchema)
