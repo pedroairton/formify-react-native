@@ -4,11 +4,11 @@ const cors = require('cors');
 dotenv.config({ path: './config.env' });
 const app = express();
 const mongoose = require('mongoose');
-require('./Employee');
+require('./Form');
 app.use(express.json({ limit: '10kb' }));
 app.use(cors());
 
-const Employee = mongoose.model('employee');
+const Form = mongoose.model('form');
 const Login = mongoose.model("login")
 
 const DB = process.env.DATABASE.replace(
@@ -27,8 +27,8 @@ mongoose.connection.on('error', (err) => {
   console.log('error', err);
 });
 
-app.get('/employees', (req, res) => {
-  Employee.find({})
+app.get('/form', (req, res) => {
+  Form.find({})
     .then((data) => {
       res.send(data);
       console.log('Conectou-se com sucesso ao banco de respostas')
@@ -49,8 +49,8 @@ app.get('/logins', (req, res) => {
 });
 
 
-app.post('/employees/send-data', (req, res) => {
-  const employee = new Employee({
+app.post('/form/send-data', (req, res) => {
+  const form = new Form({
     //  password: req.body.password,
     // email: req.body.email,
     value1: req.body.value1,
@@ -63,10 +63,9 @@ app.post('/employees/send-data', (req, res) => {
     value8: req.body.value8,
     value9: req.body.value9,
     value10: req.body.value10,
-    // valorCmt: req.body.cmt,
 
   });
-  employee
+  form
     .save()
     .then((data) => {
       console.log(data);
