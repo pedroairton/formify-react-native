@@ -24,12 +24,3 @@ export default function App() {
   );
 }
 
-// export default () => {
-//   return (
-//     <Provider store={store}>
-//       <NavigationContainer>
-//         <App />
-//       </NavigationContainer>
-//     </Provider>
-//   );
-// };
